@@ -1,0 +1,120 @@
+.wrapper {
+  /* padding: 1rem; */
+  margin-top: 0rem;
+  margin-bottom: 2rem;
+  /* display: block; */
+  /* justify-content: center; */
+}
+
+.active {
+}
+
+.select_btn {
+  background-color: #fff;
+  color: rgb(36, 39, 39);
+  border-radius: 1rem;
+  padding: 0.5rem 0.5rem 0.5rem 1rem;
+  margin: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.down_arrow {
+  font-size: 1rem;
+  transition: transform 0.1s linear;
+  /* vertical-align: bottom; */
+  /* margin-bottom: 0.05rem; */
+}
+
+.wrapper.active .down_arrow {
+  transform: rotate(-180deg);
+  display: block;
+}
+
+.title {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.search_content {
+  display: none;
+  position: absolute;
+  background-color: #fff;
+  color: rgb(36, 39, 39);
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 1rem;
+}
+
+.wrapper.active .search_content {
+  display: block;
+}
+
+.search {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.input {
+  height: 1.8rem;
+  padding-left: 1.7rem;
+  background-color: #fff;
+  border-radius: 1rem;
+  border: 1px solid #373939;
+  color: #999;
+  width: 100%;
+  /* border: 0; */
+}
+
+.search_icon {
+  position: absolute;
+  margin-left: 0.5rem;
+  color: #999;
+}
+
+.options {
+  margin-top: 1rem;
+  max-height: 10rem;
+  overflow-y: auto;
+}
+
+.options li {
+  margin-left: 0.5rem;
+  display: flex;
+  cursor: pointer;
+  height: 1.5rem;
+  border-radius: 1rem;
+}
+
+.options li:hover {
+  background: #f2f2f2;
+}
+
+.options::-webkit-scrollbar {
+  width: 7px;
+  /* color: black; */
+  /* background-color: rgb(56, 61, 62); */
+  /* border-radius: 20%; */
+}
+
+.options::-webkit-scrollbar-track {
+  /* width: 7px; */
+  /* color: black; */
+  background-color: #f1f1f1;
+  border-radius: 1rem;
+}
+
+.options::-webkit-scrollbar-thumb {
+  /* width: 7px; */
+  /* color: black; */
+  background-color: #ccc;
+  border-radius: 1rem;
+}

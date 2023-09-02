@@ -97,7 +97,7 @@
 
 .center::before,
 .center::after {
-  content: '';
+  content: "";
   left: 50%;
   position: absolute;
   filter: blur(45px);
@@ -226,4 +226,98 @@
   to {
     transform: rotate(0deg);
   }
+}
+
+.nav {
+  display: flex; /* Use flexbox to create a horizontal layout */
+  justify-content: space-around; /* Distribute menu items evenly */
+  align-items: center; /* Vertically center menu items */
+  padding: 10px; /* Add padding for spacing */
+  border-radius: 50px;
+}
+
+.glasscard_nav {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: white;
+  background: linear-gradient(
+    to right bottom,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0)
+  );
+  backdrop-filter: blur(1rem);
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5rem;
+  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.2);
+}
+
+/* Remove list styles and display list items horizontally */
+.glasscard_nav ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex; /* Use flexbox to create a horizontal layout */
+}
+
+/* Style the list items (menu items) */
+.glasscard_nav li {
+  padding: 10px 20px; /* Add padding for spacing */
+  color: white; /* Text color */
+}
+
+/* Add hover effect for list items */
+.glasscard_nav li:hover {
+  background: white;
+  background: linear-gradient(
+    to right bottom,
+    rgba(255, 255, 255, 0.2),
+    rgba(255, 255, 255, 0.1)
+  );
+  border-radius: 5rem;
+  cursor: pointer; /* Show a pointer cursor on hover */
+}
+
+.glasscard {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Center the element */
+  display: flex; /* Use flexbox to create a horizontal layout */
+  justify-content: space-around; /* Distribute menu items evenly */
+  align-items: center; /* Vertically center menu items */
+  padding: 3rem; /* Add padding for spacing */
+  border-radius: 2rem;
+  /* width: 30%; */
+  /* height: 30%; */
+  background: white;
+  background: linear-gradient(
+    to right bottom,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0)
+  );
+  backdrop-filter: blur(1rem);
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1);
+  flex-direction: column; /* Display the list items vertically */
+}
+.card_head {
+  margin-top: 0rem;
+  margin-bottom: 2rem;
+}
+.card_ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  flex: 1; /* Take up the remaining space within .glasscard */
+  /* display: flex;  */
+  /* flex-direction: column; */
+  height: 100%;
+  justify-content: space-between;
 }
