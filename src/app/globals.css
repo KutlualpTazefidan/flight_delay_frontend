@@ -38,6 +38,13 @@
   --callout-border-rgb: 172, 175, 176;
   --card-rgb: 180, 185, 188;
   --card-border-rgb: 131, 134, 135;
+
+  --dark: #00ffcc;
+  --light: #fff;
+  --spacing: 40px;
+  --border: 2px;
+  --hover-size: calc(var(--spacing) * 2 - var(--border) * 2);
+  --hover-margin: -38px;
 }
 
 @media (prefers-color-scheme: dark) {

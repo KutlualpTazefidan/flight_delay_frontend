@@ -3,6 +3,7 @@ import AirportDropdown from "../components/AirportDropdown";
 import CustomDatePicker from "../components/CustomDatePicker";
 import { MdOutlineFlight } from "react-icons/md";
 import { Exo } from "next/font/google";
+import CalculateButton from "@/components/CalculateButton";
 const exo = Exo({ subsets: ["latin"] });
 
 export default function Home() {
@@ -39,12 +40,9 @@ export default function Home() {
           </div>
           <div className={styles.calculation_side}>
             <span className={styles.title}>
-              Calculate the Estimated Flight Delay for Your Trip!
+              Calculate the Estimated Flight Delay for Your Trip:
             </span>
-            <a href="#">
-              <span class="inner"></span>
-              <i class="icon-github"></i>
-            </a>
+            <CalculateButton />
           </div>
         </div>
       </main>
