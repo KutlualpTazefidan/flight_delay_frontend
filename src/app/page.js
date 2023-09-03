@@ -4,6 +4,7 @@ import CustomDatePicker from "../components/CustomDatePicker";
 import { MdOutlineFlight } from "react-icons/md";
 import { Exo } from "next/font/google";
 import CalculateButton from "@/components/CalculateButton";
+import CalculateButtonMobile from "@/components/CalculateButtonMobile";
 const exo = Exo({ subsets: ["latin"] });
 
 export default function Home() {
@@ -24,24 +25,25 @@ export default function Home() {
             </div>
             <span className={styles.slogan}>On Time, In Control </span>
           </div>
-          <div className={styles.glasscard}>
-            <h1 className={styles.card_head}>Your Flight</h1>
-            <ul className={styles.card_ul}>
-              <li>
-                <AirportDropdown title={"Depature Airport"} />
-              </li>
-              <li>
-                <AirportDropdown title={"Arrival Airport"} />
-              </li>
-              <li>
-                <CustomDatePicker />
-              </li>
-            </ul>
+          <div className={styles.glasscard_wrapper}>
+            <div className={styles.glasscard}>
+              <h1 className={styles.card_head}>Your Flight</h1>
+              <ul className={styles.card_ul}>
+                <li>
+                  <AirportDropdown title={"Depature Airport"} />
+                </li>
+                <li>
+                  <AirportDropdown title={"Arrival Airport"} />
+                </li>
+                <li>
+                  <CustomDatePicker />
+                </li>
+              </ul>
+            </div>
+            <CalculateButtonMobile />
           </div>
+
           <div className={styles.calculation_side}>
-            <span className={styles.title}>
-              Calculate the Estimated Flight Delay for Your Trip:
-            </span>
             <CalculateButton />
           </div>
         </div>

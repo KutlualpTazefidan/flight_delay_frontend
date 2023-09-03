@@ -56,7 +56,12 @@
   border-radius: 5rem;
   cursor: pointer; /* Show a pointer cursor on hover */
 }
-
+.glasscard_wrapper {
+  display: flex;
+  align-self: center;
+  flex-direction: column;
+  align-items: center;
+}
 .glasscard {
   display: flex; /* Use flexbox to create a horizontal layout */
   justify-content: space-around; /* Distribute menu items evenly */
@@ -119,8 +124,11 @@
 }
 
 .main_logo_container {
-  display: block;
-  align-items: center;
+  display: flex;
+  flex-direction: column;
+  /* align-self: center; */
+  /* align-items: center; */
+  justify-content: center;
   position: absolute;
   margin: 6rem 3rem 3rem 6rem;
 }
@@ -162,13 +170,17 @@
   .glasscard {
     display: flex;
     width: 100%;
-
+    align-self: center;
     align-items: center;
     justify-content: center;
-    margin: 0rem 2rem 1rem 2rem;
+    margin: 10rem 0rem 1rem 0rem;
   }
 
+  .page_content {
+    justify-content: center;
+  }
   .main_logo_container {
+    margin: 6rem 0rem 3rem 0rem;
     /* display: flex; */
     /* width: 100%; */
     /* top: 5rem; */
