@@ -11,6 +11,9 @@
     rgba(0, 255, 132, 0.05),
     rgba(65, 107, 185, 0.07)
   );
+  background-color: black;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+
   transition: background 1s;
 }
 .icon {
@@ -27,6 +30,7 @@
     rgba(0, 255, 132, 0.2),
     rgba(65, 107, 185, 0.1)
   );
+  /* background-color: black; */
   border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
