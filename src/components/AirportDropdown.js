@@ -4,12 +4,17 @@ import { FaAngleDown } from "react-icons/fa";
 import { BiSearch } from "react-icons/bi";
 import { useState, useRef, useEffect } from "react";
 
+// Storage
+import { storage } from "../storage/storage";
+import { useSnapshot } from "valtio";
+
 export default function AirportDropdown({ title }) {
   const [selectedCountry, setSelectedCountry] = useState("");
   const [isActive, setIsActive] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [filteredCountries, setFilteredCountries] = useState([]);
   const dropdownRef = useRef(null);
+  const snap = useSnapshot(storage);
 
   const countries = [
     "Afghanistan",
@@ -228,6 +233,9 @@ export default function AirportDropdown({ title }) {
 
   const updateSelection = (selectedCountry) => {
     setSelectedCountry(selectedCountry);
+    title == "Departure Airport"
+      ? (snap.departure_airport = selectedCountry)
+      : (snap.arrival_airport = selectedCountry);
     setIsActive(false); // Close the dropdown when a country is selected
   };
 

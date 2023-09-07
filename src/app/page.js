@@ -15,6 +15,7 @@ export default function Home() {
           <ul>
             <li>home</li>
             <li>about</li>
+            <li>dashboard</li>
           </ul>
         </nav>
         <div className={styles.page_content}>

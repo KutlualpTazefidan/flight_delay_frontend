@@ -68,8 +68,12 @@
   align-self: center; /* Add this line */
   flex-direction: column; /* Display the list items vertically */
 
-  margin-left: 3rem;
-  padding: 3rem; /* Add padding for spacing */
+  margin-left: 2rem;
+  margin-right: 2rem;
+  padding-top: 1rem; /* Add padding for spacing */
+  padding-bottom: 2rem; /* Add padding for spacing */
+  padding-left: 3rem; /* Add padding for spacing */
+  padding-right: 3rem; /* Add padding for spacing */
   border-radius: 2rem;
   background: white;
   background: linear-gradient(
