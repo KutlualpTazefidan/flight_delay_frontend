@@ -8,11 +8,11 @@ import { useState, useRef, useEffect } from "react";
 import { storage } from "../storage/storage";
 import { useSnapshot } from "valtio";
 
-export default function AirportDropdown({ title }) {
+export default function AirportDropdown({ title, airports }) {
   const [selectedCountry, setSelectedCountry] = useState("");
   const [isActive, setIsActive] = useState(false);
   const [searchValue, setSearchValue] = useState("");
-  const [filteredCountries, setFilteredCountries] = useState([]);
+  const [filteredAirports, setFilteredAirports] = useState([]);
   const dropdownRef = useRef(null);
   const snap = useSnapshot(storage);
 
@@ -233,28 +233,30 @@ export default function AirportDropdown({ title }) {
 
   const updateSelection = (selectedCountry) => {
     setSelectedCountry(selectedCountry);
-    title == "Departure Airport"
-      ? (snap.departure_airport = selectedCountry)
-      : (snap.arrival_airport = selectedCountry);
+    title === "Departure Airport"
+      ? (storage.departure_airport = selectedCountry)
+      : (storage.arrival_airport = selectedCountry);
     setIsActive(false); // Close the dropdown when a country is selected
+    console.log("storage", storage);
+    console.log("storage", title == "Departure Airport");
   };
 
   const handleSearchInputChange = (event) => {
     const value = event.target.value;
     setSearchValue(value);
-    const filteredCountries = countries.filter((country) => {
-      return country.toLowerCase().startsWith(value.toLowerCase());
+    const filteredAirports = airports.filter((airport) => {
+      return airport.toLowerCase().startsWith(value.toLowerCase());
     });
-    setFilteredCountries(filteredCountries);
-    console.log(filteredCountries);
+    setFilteredAirports(filteredAirports);
+    console.log(filteredAirports);
   };
 
-  const renderOptionsForCountries = () => {
-    const countriesToRender =
-      filteredCountries.length > 0 ? filteredCountries : countries;
-    return countriesToRender.map((country, index) => (
-      <li onClick={() => updateSelection(country)} key={index}>
-        {country}
+  const renderOptionsForAirports = () => {
+    const airportsToRender =
+      filteredAirports.length > 0 ? filteredAirports : airports;
+    return airportsToRender.map((airport, index) => (
+      <li onClick={() => updateSelection(airport)} key={index}>
+        {airport}
       </li>
     ));
   };
@@ -287,7 +289,7 @@ export default function AirportDropdown({ title }) {
             onChange={handleSearchInputChange} // Handle input change
           />
         </div>
-        <ul className={styles.options}>{renderOptionsForCountries()}</ul>
+        <ul className={styles.options}>{renderOptionsForAirports()}</ul>
       </div>
     </div>
   );

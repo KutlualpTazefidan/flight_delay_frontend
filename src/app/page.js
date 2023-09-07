@@ -1,3 +1,4 @@
+"use client";
 import styles from "./page.module.css";
 import AirportDropdown from "../components/AirportDropdown";
 import CustomDatePicker from "../components/CustomDatePicker";
@@ -5,9 +6,70 @@ import { MdOutlineFlight } from "react-icons/md";
 import { Exo } from "next/font/google";
 import CalculateButton from "@/components/CalculateButton";
 import CalculateButtonMobile from "@/components/CalculateButtonMobile";
+import { useState, useEffect } from "react";
+import useLocalStorageState from "use-local-storage-state";
+import { useSnapshot } from "valtio";
+import { storage } from "../storage/storage";
+
 const exo = Exo({ subsets: ["latin"] });
 
 export default function Home() {
+  const [airportsData, setAirportsData] = useState([]);
+  const [airports, setAirports] = useState([]);
+  const snap = useSnapshot(storage);
+
+  // Retrieving store items to see if they changed
+  const { departure_airport, arrival_airport, departure_time, arrival_time } =
+    useSnapshot(storage);
+
+  // Storing files on local storage
+  const [localObjectsStorage, setLocalObjectsStorage] = useLocalStorageState(
+    "FlightDelayStorage",
+    { defaultValue: storage }
+  );
+
+  function getItem(key) {
+    const localStore = localStorage.getItem(key);
+    if (localStore !== null) {
+      return JSON.parse(localStore);
+    }
+    return null;
+  }
+
+  useEffect(() => {
+    // retrieve data from local storage
+    const retrievedStorage = getItem("FlightDelayStorage");
+    if (retrievedStorage) {
+      storage.departure_airport = retrievedStorage.departure_airport;
+      storage.arrival_airport = retrievedStorage.arrival_airport;
+      storage.departure_time = retrievedStorage.departure_time;
+      storage.arrival_time = retrievedStorage.arrival_time;
+    }
+
+    // Import airport data
+    fetch("./data/airportsdata.json")
+      .then((response) => response.json())
+      .then((airportsJson) => {
+        setAirportsData(airportsJson);
+        setAirports(Object.keys(airportsJson));
+      })
+      .catch((error) => {
+        console.error("Error fetching JSON airportsData:", error);
+      });
+    console.log(airportsData["ICY"]);
+    console.log(__dirname);
+  }, []);
+
+  useEffect(() => {
+    setLocalObjectsStorage(storage);
+  }, [
+    setLocalObjectsStorage,
+    departure_airport,
+    arrival_airport,
+    departure_time,
+    arrival_time,
+  ]);
+
   return (
     <>
       <main className={styles.main}>
@@ -31,10 +93,16 @@ export default function Home() {
               <h1 className={styles.card_head}>Your Flight</h1>
               <ul className={styles.card_ul}>
                 <li>
-                  <AirportDropdown title={"Depature Airport"} />
+                  <AirportDropdown
+                    title={"Departure Airport"}
+                    airports={airports}
+                  />
                 </li>
                 <li>
-                  <AirportDropdown title={"Arrival Airport"} />
+                  <AirportDropdown
+                    title={"Arrival Airport"}
+                    airports={airports}
+                  />
                 </li>
                 <li>
                   <CustomDatePicker />
