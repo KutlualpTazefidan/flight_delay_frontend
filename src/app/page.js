@@ -16,7 +16,6 @@ const exo = Exo({ subsets: ["latin"] });
 export default function Home() {
   const [airportsData, setAirportsData] = useState([]);
   const [airports, setAirports] = useState([]);
-  const snap = useSnapshot(storage);
 
   // Retrieving store items to see if they changed
   const { departure_airport, arrival_airport, departure_time, arrival_time } =
@@ -44,31 +43,19 @@ export default function Home() {
       storage.arrival_airport = retrievedStorage.arrival_airport;
       storage.departure_time = retrievedStorage.departure_time;
       storage.arrival_time = retrievedStorage.arrival_time;
+      setLocalObjectsStorage(storage);
     }
-
     // Import airport data
     fetch("./data/airportsdata.json")
       .then((response) => response.json())
       .then((airportsJson) => {
         setAirportsData(airportsJson);
-        setAirports(Object.keys(airportsJson));
+        // setAirports(Object.keys(airportsJson));
       })
       .catch((error) => {
         console.error("Error fetching JSON airportsData:", error);
       });
-    console.log(airportsData["ICY"]);
-    console.log(__dirname);
   }, []);
-
-  useEffect(() => {
-    setLocalObjectsStorage(storage);
-  }, [
-    setLocalObjectsStorage,
-    departure_airport,
-    arrival_airport,
-    departure_time,
-    arrival_time,
-  ]);
 
   return (
     <>
@@ -95,13 +82,13 @@ export default function Home() {
                 <li>
                   <AirportDropdown
                     title={"Departure Airport"}
-                    airports={airports}
+                    airportsData={airportsData}
                   />
                 </li>
                 <li>
                   <AirportDropdown
                     title={"Arrival Airport"}
-                    airports={airports}
+                    airportsData={airportsData}
                   />
                 </li>
                 <li>
