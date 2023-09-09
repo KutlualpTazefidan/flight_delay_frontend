@@ -60,6 +60,7 @@ export default function AirportDropdown({ title, airportsData }) {
     // Extract all countries to make list
     const countries = [];
     const cities = [];
+    const countryCodes = []
     for (const airportKey in airportsData) {
       if (airportsData.hasOwnProperty(airportKey)) {
         const countryCode = airportsData[airportKey].country;
@@ -73,6 +74,7 @@ export default function AirportDropdown({ title, airportsData }) {
         // Check if the country is not already in the uniqueCountries array
         if (!countries.includes(country)) {
           countries.push(country);
+          countryCodes.push(countryCode)
         }
 
         // saving city
@@ -87,6 +89,10 @@ export default function AirportDropdown({ title, airportsData }) {
     setAllCities(cities);
     console.log("set", allCountries);
   }, [airportsData]);
+
+useEffect(()=>{
+
+},[storage.departure_country])
 
   useEffect(() => {
     setLocalObjectsStorage(storage);
