@@ -46,6 +46,7 @@ export default function AirportDropdown({ title, airportsData }) {
   const [searchValueAirport, setSearchValueAirport] = useState("");
   const [searchValueCountry, setSearchValueCountry] = useState("");
   const [filteredAirports, setFilteredAirports] = useState([]);
+  const [filteredCities, setFilteredCities] = useState([]);
   const [filteredCountries, setFilteredCountries] = useState([]);
   const [allAirports, setAllAirports] = useState([]);
   const [allCountries, setAllCountries] = useState([]);
@@ -60,7 +61,7 @@ export default function AirportDropdown({ title, airportsData }) {
     // Extract all countries to make list
     const countries = [];
     const cities = [];
-    const countryCodes = []
+    const countryCodes = [];
     for (const airportKey in airportsData) {
       if (airportsData.hasOwnProperty(airportKey)) {
         const countryCode = airportsData[airportKey].country;
@@ -71,10 +72,13 @@ export default function AirportDropdown({ title, airportsData }) {
           country = countryList.getName(countryCode); // Assuming 'countries' is the country attribute
         }
 
+        // Extend airportsData with country name
+        airportsData[airportKey].countryName = country;
+
         // Check if the country is not already in the uniqueCountries array
         if (!countries.includes(country)) {
           countries.push(country);
-          countryCodes.push(countryCode)
+          countryCodes.push(countryCode);
         }
 
         // saving city
@@ -85,80 +89,44 @@ export default function AirportDropdown({ title, airportsData }) {
         // console.log("Following key not found: ", airportsData[airportKey]);
       }
     }
-    setAllCountries(countries);
-    setAllCities(cities);
+    setFilteredCountries(countries);
+    setFilteredCities(cities);
+    setFilteredAirports(Object.keys(airportsData));
     console.log("set", allCountries);
   }, [airportsData]);
 
-useEffect(()=>{
+  function getCitiesByCountry(countryName) {
+    // Filter the airports based on the selected country code
+    const filteredAirports = Object.values(airportsData).filter(
+      (airport) => airport.countryName === countryName
+    );
 
-},[storage.departure_country])
+    // Filter the cities based on the selected country code
+    const cities = Object.values(airportsData)
+      .filter((airport) => airport.countryName === countryName)
+      .map((airport) => airport.city);
+
+    // Create a flat list of airports
+    const airportKeys = filteredAirports.map((airport) => airport.iata);
+
+    return [cities, airportKeys];
+  }
 
   useEffect(() => {
     setLocalObjectsStorage(storage);
-    // console.log("saving to storage");
-    // console.log("storage", storage);
+    console.log("saving to storage");
+
+    let citiesInSelectedCountry = [];
+    let airportsInSelectedCountry = [];
+    if (snap.departure_country != "Select") {
+      [citiesInSelectedCountry, airportsInSelectedCountry] = getCitiesByCountry(
+        snap.departure_country
+      );
+    }
+    setFilteredAirports(airportsInSelectedCountry);
+    setFilteredCities(citiesInSelectedCountry);
   }, [renderTrigger]);
 
-  useEffect(() => {
-    // Add a click event listener to the document
-    document.addEventListener("mousedown", handleClickOutside);
-    // Clean up the event listener when the component unmounts
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [departure_airport, arrival_airport]);
-
-  const handleClickOutside = (event) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-      // Click occurred outside the dropdown, so close it
-      setIsAirportsActive(false);
-      setIsCountriesActive(false);
-    }
-  };
-
-  const updateSelectedAirport = (selectedAirport) => {
-    setSelectedAirport(selectedAirport);
-    title === "Departure Airport"
-      ? (storage.departure_airport = selectedAirport)
-      : (storage.arrival_airport = selectedAirport);
-    setIsAirportsActive(false); // Close the dropdown when a country is selected
-    setLocalObjectsStorage(storage);
-  };
-
-  const handleSearchInputChangeAirports = (event) => {
-    const value = event.target.value;
-    let c_filteredAirports = [];
-    if (value != "") {
-      c_filteredAirports = allAirports.filter((airport) => {
-        return airport.toLowerCase().startsWith(value.toLowerCase());
-      });
-    } else {
-      c_filteredAirports = [];
-    }
-    c_filteredAirports.length == 0
-      ? setFilteredAirports(["None"])
-      : setFilteredAirports(c_filteredAirports);
-    setSearchValueAirport(value);
-  };
-
-  const renderOptionsForAirports = () => {
-    const airportsToRender =
-      filteredAirports.length > 0 ? filteredAirports : ["Search Results"];
-    return airportsToRender.map((airport, index) => (
-      <li
-        onClick={() => updateSelectedAirport(airport)}
-        key={"airport" + index}
-      >
-        {airport}
-      </li>
-    ));
-  };
-
-  const toggleWrapperAirports = () => {
-    setIsAirportsActive(!isAirportsActive);
-    if (!isAirportsActive) setIsCountriesActive(false);
-  };
   return (
     <>
       <span className={styles.title}>{titleWords[0]}</span>
@@ -166,21 +134,21 @@ useEffect(()=>{
         {/* Country */}
         <SingleDropdown
           dd_title={"Country"}
-          allItems={allCountries}
+          allItems={filteredCountries}
           varConnectedToStorage={"departure_country"}
           renderTrigger={renderTrigger}
           setRenderTrigger={setRenderTrigger}
         />
         <SingleDropdown
           dd_title={"City"}
-          allItems={allCities}
+          allItems={filteredCities}
           varConnectedToStorage={"departure_city"}
           renderTrigger={renderTrigger}
           setRenderTrigger={setRenderTrigger}
         />
         <SingleDropdown
           dd_title={"Airport"}
-          allItems={allAirports}
+          allItems={filteredAirports}
           varConnectedToStorage={"departure_airport"}
           renderTrigger={renderTrigger}
           setRenderTrigger={setRenderTrigger}

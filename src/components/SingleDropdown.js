@@ -8,6 +8,9 @@ import { useState, useRef, useEffect } from "react";
 import { storage } from "../storage/storage";
 import { useSnapshot } from "valtio";
 
+// Efficient drop down list
+import DropdownOptions from "./DropdownOptions";
+
 export default function SingleDropdown({
   dd_title,
   varConnectedToStorage,
@@ -21,14 +24,15 @@ export default function SingleDropdown({
 
   const [isItemActive, setIsItemActive] = useState(false);
   const [searchValue, setSearchValue] = useState("");
-  const [filteredItems, setFilteredItems] = useState([]);
+  const [filteredItems, setFilteredItems] = useState(allItems);
   const dropdownRef = useRef(null);
 
   useEffect(() => {
-    setSelectedItem(snap[varConnectedToStorage]);
-  }, []);
+    setFilteredItems(allItems);
+  }, [allItems]);
 
   useEffect(() => {
+    setSelectedItem(snap[varConnectedToStorage]);
     // Add a click event listener to the document
     document.addEventListener("mousedown", handleClickOutside);
     // Clean up the event listener when the component unmounts
@@ -61,22 +65,11 @@ export default function SingleDropdown({
         return item.toLowerCase().startsWith(value.toLowerCase());
       });
     } else {
-      c_filteredItems = [];
+      c_filteredItems = allItems;
     }
     c_filteredItems.length == 0
-      ? setFilteredItems(["None"])
+      ? setFilteredItems(allItems)
       : setFilteredItems(c_filteredItems);
-    console.log("filtered", allItems);
-  };
-
-  const renderOptions = () => {
-    const itemsToRender =
-      filteredItems.length > 0 ? filteredItems : ["Search Results"];
-    return itemsToRender.map((item, index) => (
-      <li onClick={() => updateSelectedItem(item)} key={"dd_title" + index}>
-        {item}
-      </li>
-    ));
   };
 
   const toggleWrapper = () => {
@@ -108,7 +101,12 @@ export default function SingleDropdown({
             onChange={handleSearchInputChange} // Handle input change
           />
         </div>
-        <ul className={styles.options}>{renderOptions()}</ul>
+        {/* <ul className={styles.options}>{renderOptions()}</ul> */}
+        <DropdownOptions
+          filteredItems={filteredItems}
+          updateSelectedItem={updateSelectedItem}
+          selectedItem={selectedItem}
+        />
       </div>
     </div>
   );
