@@ -1,21 +1,15 @@
 .wrapper {
-  /* position: relative; */
-  /* padding: 1rem; */
-  display: flex;
+  display: block;
   flex-direction: column;
+  align-self: center;
   justify-content: space-between;
   margin-top: 0rem;
-  margin-bottom: 2rem;
-  /* align-items: center; */
-  /* left: 1rem; */
-  /* display: block; */
-  /* justify-content: center; */
+  /* margin-bottom: 2rem; */
 }
 
 .airportCountryWrapper {
   display: flex;
   flex-direction: column;
-  /* justify-content: space-between; */
 }
 .select_btn {
   background-color: #fff;
@@ -32,8 +26,6 @@
 .down_arrow {
   font-size: 1rem;
   transition: transform 0.1s linear;
-  /* vertical-align: bottom; */
-  /* margin-bottom: 0.05rem; */
 }
 
 .wrapper.active .down_arrow {
@@ -45,20 +37,18 @@
   width: 100%;
   display: flex;
   justify-content: center;
-  /* margin-bottom: 0.5rem; */
   font-size: 1.2rem;
 }
 
 .search_content {
   display: none;
   position: absolute;
-  /* top: 0; */
   background-color: #fff;
   color: rgb(36, 39, 39);
-  margin-top: 5rem;
+  /* margin-top: 5rem; */
   padding: 1rem;
   border-radius: 1rem;
-  z-index: 1;
+  z-index: 3;
 }
 
 .wrapper.active .search_content {
@@ -88,43 +78,4 @@
   position: absolute;
   margin-left: 0.5rem;
   color: #999;
-}
-
-.options {
-  margin-top: 1rem;
-  max-height: 10rem;
-  overflow-y: auto;
-}
-
-.options li {
-  margin-left: 0.5rem;
-  display: flex;
-  cursor: pointer;
-  height: 1.5rem;
-  border-radius: 1rem;
-}
-
-.options li:hover {
-  background: #f2f2f2;
-}
-
-.options::-webkit-scrollbar {
-  width: 7px;
-  /* color: black; */
-  /* background-color: rgb(56, 61, 62); */
-  /* border-radius: 20%; */
-}
-
-.options::-webkit-scrollbar-track {
-  /* width: 7px; */
-  /* color: black; */
-  background-color: #f1f1f1;
-  border-radius: 1rem;
-}
-
-.options::-webkit-scrollbar-thumb {
-  /* width: 7px; */
-  /* color: black; */
-  background-color: #ccc;
-  border-radius: 1rem;
 }

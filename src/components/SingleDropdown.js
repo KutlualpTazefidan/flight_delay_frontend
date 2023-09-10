@@ -33,6 +33,12 @@ export default function SingleDropdown({
 
   useEffect(() => {
     setSelectedItem(snap[varConnectedToStorage]);
+    // setSearchValue(snap[varConnectedToStorage]);
+    // setFilteredItems([snap[varConnectedToStorage]]);
+  }, [snap[varConnectedToStorage]]);
+
+  useEffect(() => {
+    setSelectedItem(snap[varConnectedToStorage]);
     // Add a click event listener to the document
     document.addEventListener("mousedown", handleClickOutside);
     // Clean up the event listener when the component unmounts

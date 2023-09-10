@@ -1,7 +1,5 @@
 "use client";
 import styles from "./dropdown.module.css";
-import { FaAngleDown } from "react-icons/fa";
-import { BiSearch } from "react-icons/bi";
 import { useState, useRef, useEffect } from "react";
 
 // Storage
@@ -10,6 +8,7 @@ import { useSnapshot } from "valtio";
 import useLocalStorageState from "use-local-storage-state";
 
 import SingleDropdown from "./SingleDropdown";
+import CustomDatePicker from "./CustomDatePicker";
 
 export default function AirportDropdown({ title, airportsData }) {
   const [selectedItem, setSelectedItem] = useState();
@@ -19,44 +18,26 @@ export default function AirportDropdown({ title, airportsData }) {
 
   // Split the title into words
   const titleWords = title.split(" ");
+  const prefix = titleWords[0].toLowerCase();
 
   const [localObjectsStorage, setLocalObjectsStorage] = useLocalStorageState(
     "FlightDelayStorage",
     { defaultValue: storage }
   );
   const snap = useSnapshot(storage);
-  // Retrieving store items to see if they changed
-  const {
-    departure_airport,
-    arrival_airport,
-    departure_city,
-    arrival_city,
-    departure_country,
-    arrival_country,
-  } = useSnapshot(storage);
 
-  const [selectedAirport, setSelectedAirport] = useState(
-    title === "Departure Airport"
-      ? snap.departure_airport
-      : snap.arrival_airport
-  );
-
-  const [isAirportsActive, setIsAirportsActive] = useState(false);
-  const [isCountriesActive, setIsCountriesActive] = useState(false);
-  const [searchValueAirport, setSearchValueAirport] = useState("");
-  const [searchValueCountry, setSearchValueCountry] = useState("");
   const [filteredAirports, setFilteredAirports] = useState([]);
   const [filteredCities, setFilteredCities] = useState([]);
   const [filteredCountries, setFilteredCountries] = useState([]);
-  const [allAirports, setAllAirports] = useState([]);
-  const [allCountries, setAllCountries] = useState([]);
-  const [allCities, setAllCities] = useState([]);
+
   const dropdownRef = useRef(null);
-  const [renderTrigger, setRenderTrigger] = useState(false);
+  const [renderTriggerCountry, setRenderTriggerCountry] = useState(false);
+  const [renderTriggerCity, setRenderTriggerCity] = useState(false);
+  const [renderTriggerAirport, setRenderTriggerAirport] = useState(false);
 
   useEffect(() => {
     // Extract all airports to show initially
-    setAllAirports(Object.keys(airportsData));
+    // setAllAirports(Object.keys(airportsData));
 
     // Extract all countries to make list
     const countries = [];
@@ -89,12 +70,13 @@ export default function AirportDropdown({ title, airportsData }) {
         // console.log("Following key not found: ", airportsData[airportKey]);
       }
     }
-    setFilteredCountries(countries);
-    setFilteredCities(cities);
-    setFilteredAirports(Object.keys(airportsData));
-    console.log("set", allCountries);
+    setFilteredCountries(countries.slice().sort());
+    setFilteredCities(cities.slice().sort());
+    setFilteredAirports(Object.keys(airportsData).slice().sort());
+    console.log(filteredCities);
   }, [airportsData]);
 
+  // Using UseEffect and functions
   function getCitiesByCountry(countryName) {
     // Filter the airports based on the selected country code
     const filteredAirports = Object.values(airportsData).filter(
@@ -107,51 +89,111 @@ export default function AirportDropdown({ title, airportsData }) {
       .map((airport) => airport.city);
 
     // Create a flat list of airports
-    const airportKeys = filteredAirports.map((airport) => airport.iata);
+    const airports = filteredAirports.map((airport) => airport.iata);
 
-    return [cities, airportKeys];
+    return [cities, airports];
   }
 
+  function getCountryNameForCity(city) {
+    for (const airportKey in airportsData) {
+      if (airportsData.hasOwnProperty(airportKey)) {
+        const airport = airportsData[airportKey];
+        if (airport.city === city) {
+          return airport.countryName; // Found a match, return the countryName
+        }
+      }
+    }
+    // City not found, return null or an appropriate default value
+    return null; // You can return null or any other default value as needed
+  }
+
+  function getAirportsByCityAndCountry(cityName, countryName) {
+    const matchingAirports = [];
+    for (const airportKey in airportsData) {
+      if (airportsData.hasOwnProperty(airportKey)) {
+        const airport = airportsData[airportKey];
+        if (airport.city === cityName && airport.countryName === countryName) {
+          matchingAirports.push(airport);
+        }
+      }
+    }
+    return matchingAirports;
+  }
+
+  function getForACityGetCountryAirports(cityName) {
+    const countryName = getCountryNameForCity(cityName);
+    const airports = getAirportsByCityAndCountry(cityName, countryName);
+    return [[countryName], airports];
+  }
+
+  function getForAirportGetCityCountry(airportCode) {
+    const airport = airportsData[airportCode];
+    return [airport?.country, airport?.city];
+  }
   useEffect(() => {
     setLocalObjectsStorage(storage);
     console.log("saving to storage");
 
     let citiesInSelectedCountry = [];
     let airportsInSelectedCountry = [];
-    if (snap.departure_country != "Select") {
+    if (snap[prefix + "_country"] != "Select") {
       [citiesInSelectedCountry, airportsInSelectedCountry] = getCitiesByCountry(
-        snap.departure_country
+        snap[prefix + "_country"]
       );
     }
     setFilteredAirports(airportsInSelectedCountry);
     setFilteredCities(citiesInSelectedCountry);
-  }, [renderTrigger]);
+  }, [renderTriggerCountry]);
+
+  useEffect(() => {
+    setLocalObjectsStorage(storage);
+    console.log("saving to storage");
+    let airports = [];
+    let country = [];
+
+    [country, airports] = getForACityGetCountryAirports(snap[prefix + "_city"]);
+    console.log(airports);
+    if (country[0] !== null) storage[prefix + "_country"] = country[0];
+  }, [renderTriggerCity]);
+
+  useEffect(() => {
+    setLocalObjectsStorage(storage);
+    let country = "";
+    let city = "";
+    [country, city] = getForAirportGetCityCountry(snap[prefix + "_airport"]);
+    console.log(country, city, "hey");
+    if (country !== undefined) storage[prefix + "_country"] = country;
+    if (city !== undefined) storage[prefix + "_city"] = city;
+    setRenderTriggerCountry(!renderTriggerCountry);
+    setRenderTriggerCity(!renderTriggerCity);
+  }, [renderTriggerAirport]);
 
   return (
     <>
       <span className={styles.title}>{titleWords[0]}</span>
+      <CustomDatePicker title={"departure"} />
       <div className={styles.airportCountryWrapper} ref={dropdownRef}>
         {/* Country */}
         <SingleDropdown
           dd_title={"Country"}
           allItems={filteredCountries}
-          varConnectedToStorage={"departure_country"}
-          renderTrigger={renderTrigger}
-          setRenderTrigger={setRenderTrigger}
+          varConnectedToStorage={prefix + "_country"}
+          renderTrigger={renderTriggerCountry}
+          setRenderTrigger={setRenderTriggerCountry}
         />
         <SingleDropdown
           dd_title={"City"}
           allItems={filteredCities}
-          varConnectedToStorage={"departure_city"}
-          renderTrigger={renderTrigger}
-          setRenderTrigger={setRenderTrigger}
+          varConnectedToStorage={prefix + "_city"}
+          renderTrigger={renderTriggerCity}
+          setRenderTrigger={setRenderTriggerCity}
         />
         <SingleDropdown
           dd_title={"Airport"}
           allItems={filteredAirports}
-          varConnectedToStorage={"departure_airport"}
-          renderTrigger={renderTrigger}
-          setRenderTrigger={setRenderTrigger}
+          varConnectedToStorage={prefix + "_airport"}
+          renderTrigger={renderTriggerAirport}
+          setRenderTrigger={setRenderTriggerAirport}
         />
       </div>
     </>

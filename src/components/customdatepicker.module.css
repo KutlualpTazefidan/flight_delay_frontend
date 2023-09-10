@@ -1,12 +1,11 @@
-.date_wrapper {
+/* .date_wrapper {
   position: relative;
   display: flex;
   flex-direction: column;
   min-width: 19rem;
-}
+} */
 
 .date_label {
-  /* display: block !important; */
   width: 100%;
   display: flex;
   justify-content: center;

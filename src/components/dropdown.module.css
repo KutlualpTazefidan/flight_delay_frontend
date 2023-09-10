@@ -11,7 +11,8 @@
 .airportCountryWrapper {
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  margin-top: 0.5rem;
+  /* justify-content: space-around; */
 }
 .select_btn {
   background-color: #fff;
@@ -41,8 +42,10 @@
   width: 100%;
   display: flex;
   justify-content: center;
-  margin-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
+  /* margin-bottom: 0.5rem; */
   font-size: 1.2rem;
+  border-bottom: 2px solid #ffffff6d;
 }
 
 .search_content {
