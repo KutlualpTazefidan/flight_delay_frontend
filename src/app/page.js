@@ -143,7 +143,7 @@ export default function Home() {
           </div>
 
           <div className={styles.calculation_side}>
-            <CalculateButton />
+            <CalculateButton airportsData={airportsData} />
           </div>
         </div>
       </main>

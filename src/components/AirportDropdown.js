@@ -171,7 +171,7 @@ export default function AirportDropdown({ title, airportsData }) {
   return (
     <>
       <span className={styles.title}>{titleWords[0]}</span>
-      <CustomDatePicker title={"departure"} />
+      <CustomDatePicker title={prefix} />
       <div className={styles.airportCountryWrapper} ref={dropdownRef}>
         {/* Country */}
         <SingleDropdown
