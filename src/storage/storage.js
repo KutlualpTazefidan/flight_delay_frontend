@@ -11,6 +11,7 @@ const storage = proxy({
   departure_time: dayjs(),
   arrival_time: dayjs(),
   airline: "Select",
+  airline_code: "Select",
 });
 
 export { storage };
