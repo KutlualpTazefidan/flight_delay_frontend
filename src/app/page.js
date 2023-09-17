@@ -16,8 +16,10 @@ const exo = Exo({ subsets: ["latin"] });
 
 export default function Home() {
   const [airportsData, setAirportsData] = useState([]);
+  const [unfilteredAirportsData, setUnfilteredAirportsData] = useState([]);
   const [airline_codes, setAirlineCodes] = useState([]);
   const [airline_names, setAirlineNames] = useState([]);
+  const [orgAirports, setOrgAirports] = useState([]);
   const [renderTriggerAirline, setRenderTriggerAirline] = useState(false);
 
   // Retrieving store items to see if they changed
@@ -49,28 +51,48 @@ export default function Home() {
       setLocalObjectsStorage(storage);
     }
     // Import airport data
-    fetch("./data/airportsdata.json")
-      .then((response) => response.json())
-      .then((airportsJson) => {
-        setAirportsData(airportsJson);
-        // setAirports(Object.keys(airportsJson));
-      })
-      .catch((error) => {
-        console.error("Error fetching JSON airportsData:", error);
-      });
-    // Import airline data
-    fetch("./data/airline_codes.json")
-      .then((response) => response.json())
-      .then((airlineCodeJson) => {
-        setAirlineCodes(airlineCodeJson.airline_code);
-      })
-      .catch((error) => {
-        console.error("Error fetching JSON airlineCodeJson:", error);
-      });
+    async function fetchDataFromJson() {
+      try {
+        const [
+          airportsDataResponse,
+          orgAirportsResponse,
+          airlineCodesResponse,
+        ] = await Promise.all([
+          fetch("./data/airportsdata.json").then((response) => response.json()),
+          fetch("./data/airports_in_org_dataset.json").then((response) =>
+            response.json()
+          ),
+          fetch("./data/airline_codes.json").then((response) =>
+            response.json()
+          ),
+        ]);
+        setUnfilteredAirportsData(airportsDataResponse);
+        setOrgAirports(orgAirportsResponse.airports);
+        setAirlineCodes(airlineCodesResponse.airline_code);
 
-    console.log("airline_codes", airline_names);
-    console.log("airportsData", airportsData);
+        // console.log(
+        //   "hello3a",
+        //   orgAirports.includes(unfilteredAirportsData["CMN"].iata)
+        // );
+      } catch (error) {
+        console.error("Error fetching JSON data:", error);
+      }
+    }
+    fetchDataFromJson();
   }, []);
+
+  useEffect(() => {
+    const filteredData = {};
+    Object.keys(unfilteredAirportsData).forEach((airportCode) => {
+      const airport = unfilteredAirportsData[airportCode];
+      if (orgAirports.includes(airport.iata)) {
+        filteredData[airportCode] = airport;
+      }
+    });
+    console.log("hello_5_fil", filteredData);
+    // console.log("hello_5_fil", filtered_data);
+    setAirportsData(filteredData);
+  }, [unfilteredAirportsData]);
 
   useEffect(() => {
     const translations = [];
@@ -86,7 +108,7 @@ export default function Home() {
     });
 
     setAirlineNames(translations.slice().sort());
-    console.log("airline_codesa", airline_names);
+    console.log("codes", airline_codes);
   }, [airline_codes]);
 
   useEffect(() => {

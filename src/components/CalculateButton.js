@@ -32,7 +32,7 @@ export default function CalculateButton({ airportsData }) {
     const datop = departure_time.toISOString().split("T")[0];
     const fltid = airlineCodeTranslator
       .findWhere({ name: airline })
-      .get("icao"); // abbriviation needed
+      .get("iata"); // abbriviation needed
     const depstn = departure_airport_data["iata"];
     const arrstn = arrival_airport_data["iata"];
 
@@ -47,7 +47,7 @@ export default function CalculateButton({ airportsData }) {
       .replace(/\..+/, "");
 
     const status = "ATA";
-    const ac = airlineCodeTranslator.findWhere({ name: airline }).get("icao");
+    const ac = airlineCodeTranslator.findWhere({ name: airline }).get("iata");
     const dep_iata = departure_airport_data["iata"];
     const dep_country = departure_airport_data["country"];
     const dep_elevation = departure_airport_data["elevation"];
@@ -89,7 +89,7 @@ export default function CalculateButton({ airportsData }) {
     try {
       const response = await fetch(
         // "https://flight-delay-api.onrender.com/preprocessdata",
-        "http://localhost:10000/preprocessdata",
+        "http://localhost:10000/predict",
         {
           method: "POST",
           headers: {
